@@ -1,0 +1,47 @@
+kafka:
+  properties:
+    partition.count: 1
+    replication.factor: 1
+    message.max.attempt: 2
+    retry.naming.pattern: -retry
+    dlt.naming.pattern: -dlt
+  topics:
+    request: request.example
+
+---
+spring:
+  main:
+    banner-mode: off
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      ack-mode: record
+    properties:
+      schema:
+        registry:
+          url: http://localhost:9091
+      spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    consumer:
+      group-id: example-test
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        specific:
+          avro:
+            reader: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        max:
+          request:
+            size: 5242880
+
+server:
+  port: 9001
+logging:
+  config: classpath:log4j2.yml
+

@@ -1,0 +1,10 @@
+{
+    "namespace": "com.demo.schema",
+    "type": "record",
+    "name": "ExampleRequest",
+    "fields": [
+      {"name": "id", "type": ["string", "null"] },
+      {"name": "content", "type": ["string", "null"] },
+      {"name": "favoriteNumber", "type": ["long", "null"] }
+    ]
+ }
